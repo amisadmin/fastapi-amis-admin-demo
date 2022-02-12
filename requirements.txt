@@ -1,0 +1,9 @@
+fastapi>=0.68.0
+sqlmodel>=0.0.4
+ujson>=4.0.1
+python-multipart>=0.0.5
+uvicorn
+fastapi-amis-admin
+aiosqlite
+alembic
+jinja2

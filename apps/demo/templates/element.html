@@ -1,0 +1,80 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <script src="https://unpkg.com/vue@next"></script>
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-plus"></script>
+    <title>Element Plus demo</title>
+</head>
+<body>
+<div id="app">
+    <el-button round @click="open">Hello Element Plus</el-button>
+    <br>
+    <el-switch v-model="value1" active-text="已选择" inactive-text="未选择">
+    </el-switch>
+    <el-switch style="display: block" v-model="value2" active-color="#13ce66" inactive-color="#ff4949"
+               active-text="已选择" inactive-text="未选择">
+    </el-switch>
+
+    <br>
+    <el-time-picker is-range v-model="value3" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间"
+                    placeholder="选择时间范围">
+    </el-time-picker>
+    <el-time-picker is-range arrow-control v-model="value4" range-separator="至" start-placeholder="开始时间"
+                    end-placeholder="结束时间" placeholder="选择时间范围">
+    </el-time-picker>
+    <br>
+
+    <el-progress type="circle" :percentage="0"></el-progress>
+    <el-progress type="circle" :percentage="25"></el-progress>
+    <el-progress type="circle" :percentage="100" status="success"></el-progress>
+    <el-progress type="circle" :percentage="70" status="warning"></el-progress>
+    <el-progress type="circle" :percentage="50" status="exception"></el-progress>
+    <br>
+    <el-row>
+        <el-button icon="el-icon-search" circle></el-button>
+        <el-button type="primary" icon="el-icon-edit" circle></el-button>
+        <el-button type="success" icon="el-icon-check" circle></el-button>
+        <el-button type="info" icon="el-icon-message" circle></el-button>
+        <el-button type="warning" icon="el-icon-star-off" circle></el-button>
+        <el-button type="danger" icon="el-icon-delete" circle></el-button>
+    </el-row>
+    <br>
+    <el-steps :active="1" finish-status="success">
+        <el-step title="已付款"></el-step>
+        <el-step title="退款中"></el-step>
+        <el-step title="已退款"></el-step>
+        <el-step title="待结算"></el-step>
+        <el-step title="已结算"></el-step>
+    </el-steps>
+    <el-link href="https://element-plus.org/#/zh-CN" target="_blank">ElementUI</el-link>
+</div>
+<script>
+
+    const App = {
+        delimiters: ['{[', ']}'],
+        data() {
+            return {
+                message: "Hello Element Plus",
+                value1: true,
+                value2: false,
+                value3: '',
+                value4: '',
+            };
+        },
+        methods: {
+            open() {
+                ElementPlus.ElMessage.success(this.message)
+            }
+        }
+    };
+    const app = Vue.createApp(App);
+    app.use(ElementPlus);
+    app.mount("#app");
+</script>
+
+</body>
+</html>
