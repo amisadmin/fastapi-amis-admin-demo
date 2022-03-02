@@ -140,3 +140,4 @@ cython_debug/
 
 # idea
 .idea/
+admisadmin.db
