@@ -44,7 +44,7 @@ class GitHubLinkAdmin(admin.LinkAdmin):
 @site.register_admin
 class HelloWorldPageAdmin(admin.PageAdmin):
     group_schema = 'Page'
-    page_schema = PageSchema(label='HelloWorldPage', icon='fa fa-link')
+    page_schema = PageSchema(label='HelloWorld', icon='fa fa-link')
     # 通过page类属性直接配置页面信息;
     # Page组件支持属性参考: https://baidu.gitee.io/amis/zh-CN/components/page
     page = Page(title='标题', body='Hello World!')
@@ -53,7 +53,7 @@ class HelloWorldPageAdmin(admin.PageAdmin):
 @site.register_admin
 class CurrentTimePageAdmin(admin.PageAdmin):
     group_schema = 'Page'
-    page_schema = PageSchema(label='CurrentTimePage', icon='fa fa-link')
+    page_schema = PageSchema(label='CurrentTime', icon='fa fa-link')
 
     # 通过get_page类方法实现动态获取页面信息.
     async def get_page(self, request: Request) -> Page:
@@ -98,7 +98,7 @@ class DemoJinja2Admin(admin.TemplateAdmin):
 
 @site.register_admin
 class SimpleTemplateAdmin(DemoJinja2Admin):
-    page_schema = PageSchema(label='SimpleTemplate', icon='fa fa-link')
+    page_schema = PageSchema(label='Jinja2', icon='fa fa-link')
     template_name = 'simple.html'
 
     async def get_page(self, request: Request) -> Dict[str, Any]:
@@ -107,5 +107,5 @@ class SimpleTemplateAdmin(DemoJinja2Admin):
 
 @site.register_admin
 class ElementTemplateAdmin(DemoJinja2Admin):
-    page_schema = PageSchema(label='ElementUITemplate', icon='fa fa-link')
+    page_schema = PageSchema(label='ElementUI', icon='fa fa-link')
     template_name = 'element.html'
