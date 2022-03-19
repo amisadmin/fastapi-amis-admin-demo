@@ -28,7 +28,7 @@ class ReDocsAdmin(admin.IframeAdmin):
     # 设置跳转链接
     @property
     def src(self):
-        return self.app.site.settings.site_url + '/redoc'
+        return f'{self.app.site.settings.site_url}/redoc'
 
 
 @site.register_admin
