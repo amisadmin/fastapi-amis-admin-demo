@@ -3,14 +3,20 @@ from fastapi_amis_admin.amis.components import App
 from fastapi_amis_admin.amis_admin.settings import Settings
 from fastapi_amis_admin.amis_admin.site import AdminSite, ReDocsAdmin, DocsAdmin
 from sqlalchemy.ext.asyncio import AsyncEngine
-
-# 创建后台管理系统
 from starlette.requests import Request
 
+# 1. 默认后台管理站点,无用户认证与授权系统
 site = AdminSite(settings=Settings(debug=True, database_url_async='sqlite+aiosqlite:///admisadmin.db'))
 
+# 2. 从 fastapi_user_auth 导入安装用户认证与授权系统的后台管理站点
+# 使用之前先执行'pip install fastapi_user_auth'安装库
+# 参考文档: https://github.com/amisadmin/fastapi_user_auth
+# from fastapi_user_auth.site import AuthAdminSite
+#
+# site = AuthAdminSite(settings=Settings(debug=True, database_url_async='sqlite+aiosqlite:///admisadmin.db'))
 
-# 自定义后台管理站点
+
+# 3. 自定义后台管理站点
 class NewAdminSite(AdminSite):
     # 自定义应用模板,复制原模板文件修改,原路径: fastapi_amis_admin/amis/templates/app.html
     template_name = '/templates/new_app.html'

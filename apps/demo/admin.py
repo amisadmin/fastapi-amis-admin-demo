@@ -28,12 +28,12 @@ class ReDocsAdmin(admin.IframeAdmin):
     # 设置跳转链接
     @property
     def src(self):
-        return self.app.site.settings.site_url + '/redoc'
+        return f'{self.app.site.settings.site_url}/redoc'
 
 
 @site.register_admin
 class GitHubLinkAdmin(admin.LinkAdmin):
-    group_schema = 'Page'
+    group_schema = PageSchema(label='Page', icon='fa fa-link')
     # 通过page_schema类属性设置页面菜单信息;
     # PageSchema组件支持属性参考: https://baidu.gitee.io/amis/zh-CN/components/app
     page_schema = PageSchema(label='AmisLinkAdmin', icon='fa fa-link')
@@ -92,7 +92,7 @@ class UserRegFormAdmin(admin.FormAdmin):
 
 
 class DemoJinja2Admin(admin.TemplateAdmin):
-    group_schema = 'TemplatePage'
+    group_schema = PageSchema(label='TemplatePage', icon='fa fa-link')
     templates: Jinja2Templates = Jinja2Templates(directory='apps/demo/templates')
 
 

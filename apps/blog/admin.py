@@ -5,7 +5,6 @@ from pydantic import BaseModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel.sql.expression import Select
 from starlette.requests import Request
-
 from apps.blog.models import Category, Article, Tag
 from core.adminsite import site
 from fastapi_amis_admin.amis.components import PageSchema, Action, ActionType, Dialog, TableColumn
@@ -18,7 +17,7 @@ from fastapi_amis_admin.models.fields import Field
 
 @site.register_admin
 class CategoryAdmin(admin.ModelAdmin):
-    group_schema = 'Articles'
+    group_schema = PageSchema(label='Articles', icon='fa fa-wordpress')
     page_schema = PageSchema(label='分类管理', icon='fa fa-folder')
     model = Category
     search_fields = [Category.name]
