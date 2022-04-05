@@ -4,3 +4,4 @@ fastapi-amis-admin
 aiosqlite
 alembic
 jinja2
+python-jose
