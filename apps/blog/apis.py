@@ -4,8 +4,8 @@ from sqlalchemy import update
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from apps.blog.models import Article
 from core.adminsite import site
+from apps.blog.models import Article
 
 router = APIRouter(prefix='/articles', tags=['ArticleAPI'])
 

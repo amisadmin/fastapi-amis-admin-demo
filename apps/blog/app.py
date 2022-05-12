@@ -1,11 +1,9 @@
 from fastapi_amis_admin.amis_admin.admin import AdminApp
-
-from apps.blog.admin import CategoryAdmin, ArticleAdmin, TagAdmin
 from fastapi_amis_admin.amis.components import PageSchema
 from fastapi_amis_admin.amis_admin import admin
 
 from core.adminsite import site
-
+from apps.blog.admin import CategoryAdmin, ArticleAdmin, TagAdmin
 
 @site.register_admin
 class BlogApp(admin.AdminApp):
