@@ -109,3 +109,10 @@ class SimpleTemplateAdmin(DemoJinja2Admin):
 class ElementTemplateAdmin(DemoJinja2Admin):
     page_schema = PageSchema(label='ElementUI', icon='fa fa-link')
     template_name = 'element.html'
+
+
+@site.register_admin
+class FastAPIUserAuthAdmin(admin.LinkAdmin):
+    group_schema = None
+    page_schema = PageSchema(label='FastAPIUserAuth', icon='fa fa-angellist')
+    link = 'http://user-auth.demo.amis.work/'
