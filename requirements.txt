@@ -1,6 +1,0 @@
-python-multipart>=0.0.5
-uvicorn
-fastapi-amis-admin
-aiosqlite
-alembic
-jinja2

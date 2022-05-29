@@ -6,7 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from starlette.requests import Request
 
 # 1. 默认后台管理站点,无用户认证与授权系统
-site = AdminSite(settings=Settings(debug=True, database_url_async='sqlite+aiosqlite:///admisadmin.db'))
+# site = AdminSite(settings=Settings(debug=True, database_url_async='sqlite+aiosqlite:///admisadmin.db'))
+from core import settings
+
+site = AdminSite(settings=settings)
+
 
 # 2. 从 fastapi_user_auth 导入安装用户认证与授权系统的后台管理站点
 # 使用之前先执行'pip install fastapi_user_auth'安装库

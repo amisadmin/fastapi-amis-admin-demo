@@ -14,6 +14,14 @@ from fastapi_amis_admin.models.fields import Field
 from core.adminsite import site
 from apps.blog.models import Category, Article, Tag
 
+# @site.register_admin
+# class BlogApp(admin.AdminApp):
+#     page_schema = PageSchema(label='博客应用',icon='fa fa-wordpress')
+#
+#     def __init__(self, app: "AdminApp"):
+#         super().__init__(app)
+#         self.register_admin(CategoryAdmin,ArticleAdmin,TagAdmin)
+
 @site.register_admin
 class CategoryAdmin(admin.ModelAdmin):
     group_schema = PageSchema(label='Articles', icon='fa fa-wordpress')
@@ -72,6 +80,10 @@ class ArticleAdmin(admin.ModelAdmin):
     link_model_fields = [Article.tags]
 
     # 自定义查询选择器
+    def __init__(self, app: "AdminApp"):
+        super().__init__(app)
+        self.test_action = None
+
     async def get_select(self, request: Request) -> Select:
         sel = await super().get_select(request)
         return sel.join(Category, isouter=True)

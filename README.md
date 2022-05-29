@@ -1,13 +1,34 @@
-# An example fastapi-amis-admin application
+# FastAPI-Amis-Admin-Demo
 
-Install and run:
+- [`FastAPI-Amis-Admin-Demo`](https://github.com/amisadmin/fastapi_amis_admin_demo): An example `FastAPI-Amis-Admin` application.
+- [`FastAPI-User-Auth-Demo`](https://github.com/amisadmin/fastapi_user_auth_demo): An example `FastAPI-User-Auth` application.
+
+## Develop
+
+### How to start
+
+1. create your app using `faa new app_name` .
+2. writing your apps under `fastapi_amis_admin_demo/backend/apps` folder.
+3. run your server using `faa run` .
+
+### Documentation
+
+See [Docs](https://docs.amis.work/)
+
+## Deploy
+
+### Install and run:
 
 ```shell
-git clone https://github.com/amisadmin/fastapi_amis_admin_demo.git
 cd fastapi_amis_admin_demo
-scripts/install.sh
-scripts/run.sh
+./scripts/run.sh
 ```
+
+## Demo
+
+You can check a online demo [here](http://demo.amis.work/).
+
+### Preview
 
 Open `http://127.0.0.1:8000/admin/` in your browser:
 ![ModelAdmin](https://raw.githubusercontent.com/amisadmin/fastapi_amis_admin_demo/master/upload/img/ModelAdmin.png)
