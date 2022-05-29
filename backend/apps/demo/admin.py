@@ -1,15 +1,17 @@
 import datetime
 import time
 from typing import Dict, Any
-from pydantic import BaseModel
-from starlette.requests import Request
-from starlette.templating import Jinja2Templates
-from core.adminsite import site
-from fastapi_amis_admin.amis.components import PageSchema, Page, Form, InputText, InputPassword, InputImage
+
+from fastapi_amis_admin.amis.components import PageSchema, Page, InputImage
 from fastapi_amis_admin.amis_admin import admin
 from fastapi_amis_admin.crud.schema import BaseApiOut
 from fastapi_amis_admin.models.enums import IntegerChoices
 from fastapi_amis_admin.models.fields import Field
+from pydantic import BaseModel
+from starlette.requests import Request
+from starlette.templating import Jinja2Templates
+
+from core.adminsite import site
 
 
 @site.register_admin
@@ -116,3 +118,10 @@ class FastAPIUserAuthAdmin(admin.LinkAdmin):
     group_schema = None
     page_schema = PageSchema(label='FastAPIUserAuth', icon='fa fa-angellist')
     link = 'http://user-auth.demo.amis.work/'
+
+
+@site.register_admin
+class AmisEditorAdmin(admin.IframeAdmin):
+    group_schema = None
+    page_schema = PageSchema(label='AmisEditorDemo', icon='fa fa-edit', sort=-100)
+    src = 'https://aisuda.github.io/amis-editor-demo/'
