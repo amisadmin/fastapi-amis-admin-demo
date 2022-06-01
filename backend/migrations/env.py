@@ -1,11 +1,10 @@
 import asyncio
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import AsyncEngine
-
-from alembic import context
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -13,17 +12,19 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-fileConfig(config.config_file_name)
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-# target_metadata = None
 # 导入SQLModel
 from sqlmodel import SQLModel
-from apps.blog import models
+# 导入模型数据
+from apps.blog.models import *
 
+# 设置metadata
 target_metadata = SQLModel.metadata
 
 
@@ -82,6 +83,8 @@ async def run_migrations_online():
 
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)
+
+    await connectable.dispose()
 
 
 if context.is_offline_mode():
