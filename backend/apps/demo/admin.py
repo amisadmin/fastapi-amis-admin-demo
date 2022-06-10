@@ -2,8 +2,10 @@ import datetime
 import time
 from typing import Dict, Any
 
+from fastapi_amis_admin import admin
+from fastapi_amis_admin.admin import AdminApp
+from fastapi_amis_admin.amis import TabsModeEnum
 from fastapi_amis_admin.amis.components import PageSchema, Page, InputImage
-from fastapi_amis_admin.amis_admin import admin
 from fastapi_amis_admin.crud.schema import BaseApiOut
 from fastapi_amis_admin.models.enums import IntegerChoices
 from fastapi_amis_admin.models.fields import Field
@@ -35,26 +37,31 @@ class ReDocsAdmin(admin.IframeAdmin):
 
 @site.register_admin
 class GitHubLinkAdmin(admin.LinkAdmin):
-    group_schema = PageSchema(label='Page', icon='fa fa-link')
     # 通过page_schema类属性设置页面菜单信息;
     # PageSchema组件支持属性参考: https://baidu.gitee.io/amis/zh-CN/components/app
-    page_schema = PageSchema(label='AmisLinkAdmin', icon='fa fa-link')
+    page_schema = PageSchema(label='GitHub', icon='fa fa-github')
     # 设置跳转链接
     link = 'https://github.com/amisadmin/fastapi_amis_admin'
 
 
 @site.register_admin
+class AmisPageApp(admin.AdminApp):
+    tabs_mode = TabsModeEnum.radio
+    page_schema = PageSchema(label='AmisPage', icon='fa fa-link')
+
+    def __init__(self, app: "AdminApp"):
+        super().__init__(app)
+        self.register_admin(HelloWorldPageAdmin, CurrentTimePageAdmin, UserRegFormAdmin)
+
+
 class HelloWorldPageAdmin(admin.PageAdmin):
-    group_schema = 'Page'
     page_schema = PageSchema(label='HelloWorld', icon='fa fa-link')
     # 通过page类属性直接配置页面信息;
     # Page组件支持属性参考: https://baidu.gitee.io/amis/zh-CN/components/page
     page = Page(title='标题', body='Hello World!')
 
 
-@site.register_admin
 class CurrentTimePageAdmin(admin.PageAdmin):
-    group_schema = 'Page'
     page_schema = PageSchema(label='CurrentTime', icon='fa fa-link')
 
     # 通过get_page类方法实现动态获取页面信息.
@@ -70,9 +77,7 @@ class UserGender(IntegerChoices):
     woman = 2, '女'
 
 
-@site.register_admin
 class UserRegFormAdmin(admin.FormAdmin):
-    group_schema = 'Page'
     page_schema = PageSchema(label='UserRegForm', icon='fa fa-link')
 
     # 创建表单数据模型
@@ -93,12 +98,21 @@ class UserRegFormAdmin(admin.FormAdmin):
         return BaseApiOut(status=-1, msg='用户名或密码错误!')
 
 
+@site.register_admin
+class TemplatePageApp(admin.AdminApp):
+    tabs_mode = TabsModeEnum.chrome
+    page_schema = PageSchema(label='TemplatePage', icon='fa fa-link')
+
+    def __init__(self, app: "AdminApp"):
+        super().__init__(app)
+        self.register_admin(SimpleTemplateAdmin, ElementTemplateAdmin)
+
+
 class DemoJinja2Admin(admin.TemplateAdmin):
-    group_schema = PageSchema(label='TemplatePage', icon='fa fa-link')
+    # group_schema = PageSchema(label='TemplatePage', icon='fa fa-link')
     templates: Jinja2Templates = Jinja2Templates(directory='apps/demo/templates')
 
 
-@site.register_admin
 class SimpleTemplateAdmin(DemoJinja2Admin):
     page_schema = PageSchema(label='Jinja2', icon='fa fa-link')
     template_name = 'simple.html'
@@ -107,7 +121,6 @@ class SimpleTemplateAdmin(DemoJinja2Admin):
         return {'current_time': datetime.datetime.now()}
 
 
-@site.register_admin
 class ElementTemplateAdmin(DemoJinja2Admin):
     page_schema = PageSchema(label='ElementUI', icon='fa fa-link')
     template_name = 'element.html'
