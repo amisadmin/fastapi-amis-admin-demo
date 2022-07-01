@@ -1,10 +1,11 @@
 from datetime import datetime
 from typing import Optional, List
-from sqlalchemy import Column, String, Integer, Text
-from sqlmodel import SQLModel, Relationship
+
 from fastapi_amis_admin.amis.components import InputRichText, InputImage, ColumnImage
 from fastapi_amis_admin.models.enums import IntegerChoices
 from fastapi_amis_admin.models.fields import Field
+from sqlalchemy import Column, String
+from sqlmodel import SQLModel, Relationship
 
 
 class ArticleStatus(IntegerChoices):

@@ -2,13 +2,13 @@ import datetime
 from typing import List, Any
 
 from fastapi_amis_admin import admin
+from fastapi_amis_admin.admin import AdminApp
 from fastapi_amis_admin.amis.components import PageSchema, Action, ActionType, Dialog, TableColumn
 from fastapi_amis_admin.amis.constants import LevelEnum
 from fastapi_amis_admin.crud.schema import BaseApiOut
 from fastapi_amis_admin.models.enums import IntegerChoices
 from fastapi_amis_admin.models.fields import Field
 from pydantic import BaseModel
-from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel.sql.expression import Select
 from starlette.requests import Request
 
@@ -58,9 +58,8 @@ class TestAction(admin.ModelAction):
         gender: UserGender = Field(UserGender.unknown, title='性别')
         is_active: bool = Field(True, title='是否激活')
 
-    async def handle(self, request: Request, item_id: List[str], data: schema, session: AsyncSession, **kwargs) -> \
-            BaseApiOut[Any]:
-        items = await self.fetch_item_scalars(session, item_id)
+    async def handle(self, request: Request, item_id: List[str], data: schema, **kwargs) -> BaseApiOut[Any]:
+        items = await self.fetch_item_scalars(item_id)
         return BaseApiOut(data=dict(item_id=item_id, data=data, items=list(items)))
 
 
