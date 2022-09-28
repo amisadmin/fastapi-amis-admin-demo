@@ -1,3 +1,5 @@
+#todo: Switch to pdm
+
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
 
 WORKDIR /backend

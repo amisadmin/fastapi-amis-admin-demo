@@ -1,10 +1,13 @@
-from fastapi import FastAPI
-from starlette.responses import RedirectResponse
-
 from core.adminsite import site
 from core.settings import settings
+from fastapi import FastAPI
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import RedirectResponse
 
 app = FastAPI(debug=settings.debug)
+
+# 将一个SQLAlchemy会话连接绑定到传入的HTTP请求会话上下文，可以通过`site.db.session`访问会话对象
+app.add_middleware(BaseHTTPMiddleware, dispatch=site.db.asgi_dispatch)
 
 # 安装应用demo
 from apps import demo
@@ -24,9 +27,10 @@ async def startup():
     pass
 
 
-@app.get('/')
+@app.get("/")
 async def index():
     return RedirectResponse(url=site.router_path)
+
 
 # # 1.配置 CORSMiddleware
 # from starlette.middleware.cors import CORSMiddleware

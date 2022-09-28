@@ -2,8 +2,7 @@ import asyncio
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 # this is the Alembic Config object, which provides
@@ -15,14 +14,15 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+# 导入模型数据
+from apps.blog.models import *
+
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 # 导入SQLModel
 from sqlmodel import SQLModel
-# 导入模型数据
-from apps.blog.models import *
 
 # 设置metadata
 target_metadata = SQLModel.metadata

@@ -1,0 +1,56 @@
+[project]
+name = ""
+version = ""
+description = ""
+authors = [
+    { name = "atomi", email = "1456417373@qq.com" },
+]
+dependencies = [
+    "uvicorn>=0.18.3",
+    "uvicorn~=0.17.6",
+    "pydantic[dotenv]~=1.9.0",
+    "aiosqlite~=0.17.0",
+    "fastapi-amis-admin<0.3.0,>=0.2.3",
+    "alembic~=1.7.6",
+    "psutil>=5.9.2",
+]
+requires-python = ">=3.8"
+license = { text = "MIT" }
+[project.optional-dependencies]
+
+[build-system]
+requires = ["pdm-pep517>=1.0.0"]
+build-backend = "pdm.pep517.api"
+
+[tool]
+[tool.pdm]
+[tool.pdm.dev-dependencies]
+dev = [
+    "-e file:///I:/Python/Project/WWW/fastapi-amis-admin/fastapi_amis_admin#egg=fastapi-amis-admin",
+    "-e file:///I:/Python/Project/WWW/fastapi-amis-admin/sqlalchemy_database#egg=sqlalchemy-database",
+    "pre-commit>=2.20.0",
+]
+[tool.pdm.scripts]
+_.env_file = "./backend/.env"
+lint = "pre-commit run --all-files"
+run = { call = "scripts.main:run" }
+kill = { call = "scripts.main:kill" }
+
+
+[tool.isort]
+profile = "black"
+atomic = true
+filter_files = true
+
+[tool.black]
+line-length = 130
+include = '\.pyi?$'
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+python_files = [
+    "test_*",
+    "*_test"
+]
+# pytest-asyncio
+asyncio_mode = "auto"
