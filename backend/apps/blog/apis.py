@@ -4,10 +4,8 @@ from typing import List
 from apps.blog.models import Article, ArticleStatus
 from core.adminsite import site
 from fastapi import APIRouter, Depends
-from sqlalchemy import delete, insert, select, update
-from sqlalchemy.orm import selectinload
+from sqlalchemy import insert, select, update
 from sqlmodel.ext.asyncio.session import AsyncSession
-from starlette.requests import Request
 
 # 通过注册依赖方式验证用户权限,当前路由注册器下全部路由都将进行权限验证.
 router = APIRouter(prefix="/articles", tags=["ArticleAPI"])
@@ -65,7 +63,8 @@ async def create_article2(data: Article):
 async def list_article2():
     # 通用的查询表达式可以写在ORM模型,提供一个方法调用.
     stmt = select(Article).where(Article.status == ArticleStatus.published.value).limit(10).order_by(Article.create_time)
-    return await site.db.async_scalars_all(stmt)
+    result = await site.db.async_scalars(stmt)
+    return result.all()
 
 
 # 方式三: 通过注册中间件,在每次请求时自动获取session,并在请求结束时自动关闭session.
@@ -98,4 +97,5 @@ async def create_article3(data: Article):
 async def list_article3():
     # 通用的查询表达式可以写在ORM模型,提供一个方法调用.
     stmt = select(Article).where(Article.status == ArticleStatus.published.value).limit(10).order_by(Article.create_time)
-    return await site.db.session.scalars(stmt)
+    result = await site.db.session.scalars(stmt)
+    return result.all()

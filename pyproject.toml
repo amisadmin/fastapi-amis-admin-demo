@@ -7,10 +7,9 @@ authors = [
 ]
 dependencies = [
     "uvicorn>=0.18.3",
-    "uvicorn~=0.17.6",
     "pydantic[dotenv]~=1.9.0",
     "aiosqlite~=0.17.0",
-    "fastapi-amis-admin<0.3.0,>=0.2.3",
+    "fastapi-amis-admin<0.5.0,>=0.4.0",
     "alembic~=1.7.6",
     "psutil>=5.9.2",
 ]
@@ -26,8 +25,6 @@ build-backend = "pdm.pep517.api"
 [tool.pdm]
 [tool.pdm.dev-dependencies]
 dev = [
-    "-e file:///I:/Python/Project/WWW/fastapi-amis-admin/fastapi_amis_admin#egg=fastapi-amis-admin",
-    "-e file:///I:/Python/Project/WWW/fastapi-amis-admin/sqlalchemy_database#egg=sqlalchemy-database",
     "pre-commit>=2.20.0",
 ]
 [tool.pdm.scripts]
