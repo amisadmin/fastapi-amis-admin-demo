@@ -3,7 +3,7 @@ from typing import Any, List
 
 from apps.blog.models import Article, Category, Tag
 from core.adminsite import site
-from fastapi_amis_admin import admin
+from fastapi_amis_admin import admin, amis
 from fastapi_amis_admin.admin import AdminApp
 from fastapi_amis_admin.amis.components import (
     Action,
@@ -119,6 +119,27 @@ class ArticleAdmin(admin.ModelAdmin):
         action = await self.test_action.get_action(request)
         action.label = "自定义单项操作动作"
         actions.append(action.copy())
+        # 添加了一个自定义的单项操作动作,点击后会弹出一个对话框,对话框内容为Iframe.
+        actions.append(
+            ActionType.Dialog(
+                label="自定义Iframe动作",
+                dialog=Dialog(
+                    size="lg",
+                    body=amis.Iframe(
+                        src=f"{self.site.router_path}/templatepageapp/page/element.html",
+                        height=500,
+                        events={
+                            "detail": {
+                                "actionType": "dialog",
+                                "dialog": {"title": "弹框", "body": "iframe 传给 amis 的 id 是：${iframeId}"},
+                            }
+                        },
+                    ),
+                ),
+                size="md",
+            )
+        )
+
         return actions
 
     # 添加自定义工具条动作

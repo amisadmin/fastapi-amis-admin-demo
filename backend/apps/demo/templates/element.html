@@ -75,6 +75,12 @@
     app.use(ElementPlus);
     app.mount("#app");
 </script>
-
+<script>
+    //在 iframe 页面中添加message事件监听器，在 iframe 初始化、更新或者接收到其他组件发送数据的时候，会通过 postMessage 发送当前数据域数据，iframe 页面的事件监听器中可以通过e.data进行获取：
+    window.addEventListener('message', e => {
+        // e.data 获取当前数据域数据，进行使用
+        console.log(e.data);
+    });
+</script>
 </body>
 </html>
