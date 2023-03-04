@@ -5,6 +5,7 @@ from typing import Any, Dict
 from core.adminsite import site
 from fastapi_amis_admin import admin
 from fastapi_amis_admin.admin import AdminApp
+from fastapi_amis_admin.admin.site import APIDocsApp
 from fastapi_amis_admin.amis import TabsModeEnum
 from fastapi_amis_admin.amis.components import InputImage, Page, PageSchema
 from fastapi_amis_admin.crud.schema import BaseApiOut
@@ -14,17 +15,17 @@ from pydantic import BaseModel
 from starlette.requests import Request
 from starlette.templating import Jinja2Templates
 
+api_docs_app = site.get_admin_or_create(APIDocsApp)  # 获取或创建默认的APIDocsApp实例
 
-@site.register_admin
+
+@api_docs_app.register_admin
 class DocsAdmin(admin.IframeAdmin):
-    group_schema = PageSchema(label="APIDocs", sort=-100)
     page_schema = PageSchema(label="Docs", icon="fa fa-book")
     src = "/docs"
 
 
-@site.register_admin
+@api_docs_app.register_admin
 class ReDocsAdmin(admin.IframeAdmin):
-    group_schema = PageSchema(label="APIDocs", sort=-100)
     # 设置页面菜单信息
     page_schema = PageSchema(label="Redocs", icon="fa fa-book")
 
@@ -50,7 +51,11 @@ class AmisPageApp(admin.AdminApp):
 
     def __init__(self, app: "AdminApp"):
         super().__init__(app)
-        self.register_admin(HelloWorldPageAdmin, CurrentTimePageAdmin, UserRegFormAdmin)
+        self.register_admin(
+            HelloWorldPageAdmin,
+            CurrentTimePageAdmin,
+            UserRegFormAdmin,
+        )
 
 
 class HelloWorldPageAdmin(admin.PageAdmin):
@@ -107,11 +112,13 @@ class TemplatePageApp(admin.AdminApp):
 
     def __init__(self, app: "AdminApp"):
         super().__init__(app)
-        self.register_admin(SimpleTemplateAdmin, ElementTemplateAdmin)
+        self.register_admin(
+            SimpleTemplateAdmin,
+            ElementTemplateAdmin,
+        )
 
 
 class DemoJinja2Admin(admin.TemplateAdmin):
-    # group_schema = PageSchema(label='TemplatePage', icon='fa fa-link')
     templates: Jinja2Templates = Jinja2Templates(directory="apps/demo/templates")
 
 
@@ -130,13 +137,11 @@ class ElementTemplateAdmin(DemoJinja2Admin):
 
 @site.register_admin
 class FastAPIUserAuthAdmin(admin.LinkAdmin):
-    group_schema = None
     page_schema = PageSchema(label="FastAPIUserAuth", icon="fa fa-angellist")
     link = "http://user-auth.demo.amis.work/"
 
 
 @site.register_admin
 class AmisEditorAdmin(admin.IframeAdmin):
-    group_schema = None
     page_schema = PageSchema(label="AmisEditorDemo", icon="fa fa-edit", sort=-100)
     src = "https://aisuda.github.io/amis-editor-demo/"

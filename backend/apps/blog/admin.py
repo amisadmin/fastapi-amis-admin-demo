@@ -4,7 +4,7 @@ from typing import Any, List
 from apps.blog.models import Article, Category, Tag
 from core.adminsite import site
 from fastapi_amis_admin import admin, amis
-from fastapi_amis_admin.admin import AdminApp
+from fastapi_amis_admin.admin import AdminAction, AdminApp
 from fastapi_amis_admin.amis.components import (
     Action,
     ActionType,
@@ -21,26 +21,27 @@ from pydantic import BaseModel
 from sqlmodel.sql.expression import Select
 from starlette.requests import Request
 
-# @site.register_admin
-# class BlogApp(admin.AdminApp):
-#     page_schema = PageSchema(label='博客应用',icon='fa fa-wordpress')
-#
-#     def __init__(self, app: "AdminApp"):
-#         super().__init__(app)
-#         self.register_admin(CategoryAdmin,ArticleAdmin,TagAdmin)
-
 
 @site.register_admin
+class BlogApp(admin.AdminApp):
+    page_schema = PageSchema(label="博客应用", icon="fa fa-wordpress")
+
+    def __init__(self, app: "AdminApp"):
+        super().__init__(app)
+        self.register_admin(
+            CategoryAdmin,
+            ArticleAdmin,
+            TagAdmin,
+        )
+
+
 class CategoryAdmin(admin.ModelAdmin):
-    group_schema = PageSchema(label="Articles", icon="fa fa-wordpress")
     page_schema = PageSchema(label="分类管理", icon="fa fa-folder")
     model = Category
     search_fields = [Category.name]
 
 
-@site.register_admin
 class TagAdmin(admin.ModelAdmin):
-    group_schema = "Articles"
     page_schema = PageSchema(label="标签管理", icon="fa fa-tags")
     model = Tag
     search_fields = [Tag.name]
@@ -65,13 +66,11 @@ class TestAction(admin.ModelAction):
         is_active: bool = Field(True, title="是否激活")
 
     async def handle(self, request: Request, item_id: List[str], data: schema, **kwargs) -> BaseApiOut[Any]:
-        items = await self.fetch_item_scalars(item_id)
+        items = await self.admin.fetch_items(*item_id)
         return BaseApiOut(data=dict(item_id=item_id, data=data, items=list(items)))
 
 
-@site.register_admin
 class ArticleAdmin(admin.ModelAdmin):
-    group_schema = "Articles"
     page_schema = PageSchema(label="文章管理", icon="fa fa-file")
     model = Article
     # 配置列表展示字段
@@ -95,34 +94,15 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = [Article.title, Category.name]
     # 配置关联模型
     link_model_fields = [Article.tags]
-
-    # 自定义查询选择器
-    def __init__(self, app: "AdminApp"):
-        super().__init__(app)
-        self.test_action = None
-
-    async def get_select(self, request: Request) -> Select:
-        sel = await super().get_select(request)
-        return sel.join(Category, isouter=True)
-
-    # 添加自定义批量操作动作
-    async def get_actions_on_bulk(self, request: Request) -> List[Action]:
-        actions = await super().get_actions_on_bulk(request)
-        action = await self.test_action.get_action(request)
-        action.label = "自定义批量操作动作"
-        actions.append(action.copy())
-        return actions
-
-    # 添加自定义单项操作动作
-    async def get_actions_on_item(self, request: Request) -> List[Action]:
-        actions = await super().get_actions_on_item(request)
-        action = await self.test_action.get_action(request)
-        action.label = "自定义单项操作动作"
-        actions.append(action.copy())
-        # 添加了一个自定义的单项操作动作,点击后会弹出一个对话框,对话框内容为Iframe.
-        actions.append(
-            ActionType.Dialog(
-                label="自定义Iframe动作",
+    # 配置自定义动作
+    admin_action_maker = [
+        lambda self: TestAction(self, name="test_action", label="自定义动作", flags=["item", "bulk"]),
+        lambda self: AdminAction(
+            self,
+            name="iframe_action",
+            label="自定义Iframe动作",
+            flags=["item"],
+            action=ActionType.Dialog(
                 dialog=Dialog(
                     size="lg",
                     body=amis.Iframe(
@@ -137,29 +117,33 @@ class ArticleAdmin(admin.ModelAdmin):
                     ),
                 ),
                 size="md",
-            )
-        )
-
-        return actions
-
-    # 添加自定义工具条动作
-    async def get_actions_on_header_toolbar(self, request: Request) -> List[Action]:
-        actions = await super().get_actions_on_header_toolbar(request)
-
-        actions.append(
-            ActionType.Ajax(
-                label="工具条ajax动作",
+            ),
+        ),
+        lambda self: AdminAction(
+            self,
+            name="toolbar_action1",
+            label="工具条ajax动作",
+            flags=["toolbar"],
+            action=ActionType.Ajax(
                 level=LevelEnum.danger,
                 api="https://3xsw4ap8wah59.cfc-execute.bj.baidubce.com/api/amis-mock/mock2/form/saveForm",
-            )
-        )
-
-        actions.append(
-            ActionType.Link(label="工具条link动作", level=LevelEnum.secondary, link="https://github.com/amisadmin/fastapi_amis_admin")
-        )
-
-        actions.append(
-            ActionType.Drawer(
+            ),
+        ),
+        lambda self: AdminAction(
+            self,
+            name="toolbar_action2",
+            label="工具条link动作",
+            flags=["toolbar"],
+            action=ActionType.Link(
+                label="工具条link动作", level=LevelEnum.secondary, link="https://github.com/amisadmin/fastapi_amis_admin"
+            ),
+        ),
+        lambda self: AdminAction(
+            self,
+            name="toolbar_action3",
+            label="工具条抽屉动作",
+            flags=["toolbar"],
+            action=ActionType.Drawer(
                 label="工具条抽屉动作",
                 level=LevelEnum.info,
                 drawer={
@@ -185,12 +169,11 @@ class ArticleAdmin(admin.ModelAdmin):
                         ],
                     },
                 },
-            )
-        )
-        return actions
+            ),
+        ),
+    ]
 
-    # 注册自定义路由
-    def register_router(self):
-        super().register_router()
-        # 注册动作路由
-        self.test_action = TestAction(self).register_router()
+    # 自定义查询选择器
+    async def get_select(self, request: Request) -> Select:
+        sel = await super().get_select(request)
+        return sel.join(Category, isouter=True)
