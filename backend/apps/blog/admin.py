@@ -100,9 +100,9 @@ class ArticleAdmin(admin.ModelAdmin):
         lambda self: AdminAction(
             self,
             name="iframe_action",
-            label="自定义Iframe动作",
             flags=["item"],
             action=ActionType.Dialog(
+                label="自定义Iframe动作",
                 dialog=Dialog(
                     size="lg",
                     body=amis.Iframe(
@@ -122,9 +122,9 @@ class ArticleAdmin(admin.ModelAdmin):
         lambda self: AdminAction(
             self,
             name="toolbar_action1",
-            label="工具条ajax动作",
             flags=["toolbar"],
             action=ActionType.Ajax(
+                label="工具条ajax动作",
                 level=LevelEnum.danger,
                 api="https://3xsw4ap8wah59.cfc-execute.bj.baidubce.com/api/amis-mock/mock2/form/saveForm",
             ),
@@ -132,16 +132,16 @@ class ArticleAdmin(admin.ModelAdmin):
         lambda self: AdminAction(
             self,
             name="toolbar_action2",
-            label="工具条link动作",
             flags=["toolbar"],
             action=ActionType.Link(
-                label="工具条link动作", level=LevelEnum.secondary, link="https://github.com/amisadmin/fastapi_amis_admin"
+                label="工具条link动作",
+                level=LevelEnum.secondary,
+                link="https://github.com/amisadmin/fastapi_amis_admin"
             ),
         ),
         lambda self: AdminAction(
             self,
             name="toolbar_action3",
-            label="工具条抽屉动作",
             flags=["toolbar"],
             action=ActionType.Drawer(
                 label="工具条抽屉动作",
