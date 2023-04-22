@@ -46,8 +46,7 @@ class GitHubLinkAdmin(admin.LinkAdmin):
 
 @site.register_admin
 class AmisPageApp(admin.AdminApp):
-    tabs_mode = TabsModeEnum.radio
-    page_schema = PageSchema(label="AmisPage", icon="fa fa-link")
+    page_schema = PageSchema(label="AmisPage", icon="fa fa-link", tabsMode=TabsModeEnum.radio)
 
     def __init__(self, app: "AdminApp"):
         super().__init__(app)
@@ -107,8 +106,7 @@ class UserRegFormAdmin(admin.FormAdmin):
 
 @site.register_admin
 class TemplatePageApp(admin.AdminApp):
-    tabs_mode = TabsModeEnum.chrome
-    page_schema = PageSchema(label="TemplatePage", icon="fa fa-link")
+    page_schema = PageSchema(label="TemplatePage", icon="fa fa-link",tabsMode=TabsModeEnum.chrome)
 
     def __init__(self, app: "AdminApp"):
         super().__init__(app)
