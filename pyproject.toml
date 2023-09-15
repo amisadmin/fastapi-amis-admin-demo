@@ -7,11 +7,11 @@ authors = [
 ]
 dependencies = [
     "uvicorn>=0.18.3",
-    "pydantic[dotenv]~=1.9.0",
-    "aiosqlite~=0.17.0",
-    "fastapi-amis-admin<0.6.0,>=0.5.0",
-    "alembic~=1.7.6",
-    "psutil>=5.9.2",
+    "pydantic[dotenv]>=1.10.0,<2.0.0",
+    "aiosqlite>=0.15.0",
+    "fastapi-amis-admin[cli]<0.7.0,>=0.6.4",
+    "sqlmodelx>=0.0.5",
+    "alembic>=1.7.6",
 ]
 requires-python = ">=3.8"
 license = { text = "MIT" }
@@ -28,11 +28,10 @@ dev = [
     "pre-commit>=2.20.0",
 ]
 [tool.pdm.scripts]
-_.env_file = "./backend/.env"
+#_.env_file = "./backend/.env"
+run = "faa run"
+stop = "faa stop"
 lint = "pre-commit run --all-files"
-run = { call = "scripts.main:run" }
-kill = { call = "scripts.main:kill" }
-
 
 [tool.isort]
 profile = "black"
@@ -42,6 +41,26 @@ filter_files = true
 [tool.black]
 line-length = 130
 include = '\.pyi?$'
+
+[tool.ruff]
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "C", # flake8-comprehensions
+    "B", # flake8-bugbear
+]
+ignore = [
+    "B008", # do not perform function calls in argument defaults
+    "C901", # too complex
+    "E711", # sqlalchmey comparison
+]
+# Same as Black.
+line-length = 130
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"

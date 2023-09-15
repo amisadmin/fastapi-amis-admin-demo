@@ -2,7 +2,7 @@ import datetime
 import time
 from typing import Any, Dict
 
-from core.adminsite import site
+from core.globals import site
 from fastapi_amis_admin import admin
 from fastapi_amis_admin.admin import AdminApp
 from fastapi_amis_admin.admin.site import APIDocsApp
@@ -106,7 +106,7 @@ class UserRegFormAdmin(admin.FormAdmin):
 
 @site.register_admin
 class TemplatePageApp(admin.AdminApp):
-    page_schema = PageSchema(label="TemplatePage", icon="fa fa-link",tabsMode=TabsModeEnum.chrome)
+    page_schema = PageSchema(label="TemplatePage", icon="fa fa-link", tabsMode=TabsModeEnum.chrome)
 
     def __init__(self, app: "AdminApp"):
         super().__init__(app)

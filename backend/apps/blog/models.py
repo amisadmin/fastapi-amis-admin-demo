@@ -52,6 +52,3 @@ class Article(SQLModel, table=True):
     category: Optional[Category] = Relationship(back_populates="articles")
     tags: List[Tag] = Relationship(back_populates="articles", link_model=ArticleTagLink)
     source: str = Field(default="", title="ArticleSource", max_length=200)
-
-    class Config:
-        use_enum_values = True

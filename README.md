@@ -25,7 +25,12 @@ See [Docs](https://docs.amis.work/)
 
 ```shell
 cd fastapi_amis_admin_demo
-./scripts/run.sh
+# Install pdm(https://pdm.fming.dev/) first
+pip install --user pdm
+# Install dependencies
+pdm install
+# Run server
+pdm run run
 ```
 
 ## Demo

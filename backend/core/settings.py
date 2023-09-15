@@ -17,4 +17,7 @@ class Settings(admin.Settings):
     allow_origins: List[str] = None
 
 
+# 设置FAA_GLOBALS环境变量
+os.environ.setdefault("FAA_GLOBALS", "core.globals")
+
 settings = Settings(_env_file=os.path.join(BACKEND_DIR, ".env"))

@@ -1,12 +1,10 @@
 import datetime
 from typing import Any, List
 
-from apps.blog.models import Article, Category, Tag
-from core.adminsite import site
+from core.globals import site
 from fastapi_amis_admin import admin, amis
 from fastapi_amis_admin.admin import AdminAction, AdminApp
 from fastapi_amis_admin.amis.components import (
-    Action,
     ActionType,
     Dialog,
     PageSchema,
@@ -20,6 +18,8 @@ from fastapi_amis_admin.models.fields import Field
 from pydantic import BaseModel
 from sqlmodel.sql.expression import Select
 from starlette.requests import Request
+
+from apps.blog.models import Article, Category, Tag
 
 
 @site.register_admin
@@ -55,7 +55,7 @@ class UserGender(IntegerChoices):
 
 
 class TestAction(admin.ModelAction):
-    action = ActionType.Dialog(label="自定义表单动作", dialog=Dialog())
+    action = ActionType.Dialog(tooltip="自定义表单动作",icon="fa fa-star",level=LevelEnum.warning, dialog=Dialog())
 
     # 创建表单数据模型
     class schema(BaseModel):
@@ -67,7 +67,7 @@ class TestAction(admin.ModelAction):
 
     async def handle(self, request: Request, item_id: List[str], data: schema, **kwargs) -> BaseApiOut[Any]:
         items = await self.admin.fetch_items(*item_id)
-        return BaseApiOut(data=dict(item_id=item_id, data=data, items=list(items)))
+        return BaseApiOut(data={"item_id": item_id, "data": data, "items": list(items)})
 
 
 class ArticleAdmin(admin.ModelAdmin):
@@ -102,11 +102,13 @@ class ArticleAdmin(admin.ModelAdmin):
             name="iframe_action",
             flags=["item"],
             action=ActionType.Dialog(
-                label="自定义Iframe动作",
+                icon="fa fa-star",
+                level=LevelEnum.warning,
+                tooltip="自定义Iframe动作",
                 dialog=Dialog(
                     size="lg",
                     body=amis.Iframe(
-                        src=f"{self.site.router_path}/templatepageapp/page/element.html",
+                        src=f"{self.site.router_path}/TemplatePageApp/page/element.html",
                         height=500,
                         events={
                             "detail": {
@@ -134,9 +136,7 @@ class ArticleAdmin(admin.ModelAdmin):
             name="toolbar_action2",
             flags=["toolbar"],
             action=ActionType.Link(
-                label="工具条link动作",
-                level=LevelEnum.secondary,
-                link="https://github.com/amisadmin/fastapi_amis_admin"
+                label="工具条link动作", level=LevelEnum.secondary, link="https://github.com/amisadmin/fastapi_amis_admin"
             ),
         ),
         lambda self: AdminAction(
@@ -172,8 +172,9 @@ class ArticleAdmin(admin.ModelAdmin):
             ),
         ),
     ]
+    display_item_action_as_column = True  # 将item_action显示为列
 
     # 自定义查询选择器
     async def get_select(self, request: Request) -> Select:
         sel = await super().get_select(request)
-        return sel.join(Category, isouter=True)
+        return sel.outerjoin(Category)
