@@ -15,7 +15,7 @@ from pydantic import BaseModel
 from starlette.requests import Request
 from starlette.templating import Jinja2Templates
 
-api_docs_app = site.get_admin_or_create(APIDocsApp)  # 获取或创建默认的APIDocsApp实例
+api_docs_app = site.get_admin_or_create(APIDocsApp)  # Get or create a default APIDocsApp instance
 
 
 @api_docs_app.register_admin
@@ -26,10 +26,10 @@ class DocsAdmin(admin.IframeAdmin):
 
 @api_docs_app.register_admin
 class ReDocsAdmin(admin.IframeAdmin):
-    # 设置页面菜单信息
+    # Set page menu information
     page_schema = PageSchema(label="Redocs", icon="fa fa-book")
 
-    # 设置跳转链接
+    # Set redirect link
     @property
     def src(self):
         return f"{self.app.site.settings.site_url}/redoc"
@@ -37,10 +37,9 @@ class ReDocsAdmin(admin.IframeAdmin):
 
 @site.register_admin
 class GitHubLinkAdmin(admin.LinkAdmin):
-    # 通过page_schema类属性设置页面菜单信息;
-    # PageSchema组件支持属性参考: https://baidu.gitee.io/amis/zh-CN/components/app
+    # Set page menu information via page_schema class attribute
     page_schema = PageSchema(label="GitHub", icon="fa fa-github")
-    # 设置跳转链接
+    # Set redirect link
     link = "https://github.com/amisadmin/fastapi_amis_admin"
 
 
@@ -59,49 +58,44 @@ class AmisPageApp(admin.AdminApp):
 
 class HelloWorldPageAdmin(admin.PageAdmin):
     page_schema = PageSchema(label="HelloWorld", icon="fa fa-link")
-    # 通过page类属性直接配置页面信息;
-    # Page组件支持属性参考: https://baidu.gitee.io/amis/zh-CN/components/page
-    page = Page(title="标题", body="Hello World!")
+    page = Page(title="Title", body="Hello World!")
 
 
 class CurrentTimePageAdmin(admin.PageAdmin):
     page_schema = PageSchema(label="CurrentTime", icon="fa fa-link")
 
-    # 通过get_page类方法实现动态获取页面信息.
     async def get_page(self, request: Request) -> Page:
         page = await super().get_page(request)
-        page.body = "当前时间是: " + time.strftime("%Y-%m-%d %H:%M:%S")
+        page.body = "The current time is: " + time.strftime("%Y-%m-%d %H:%M:%S")
         return page
 
 
 class UserGender(IntegerChoices):
-    unknown = 0, "保密"
-    man = 1, "男"
-    woman = 2, "女"
+    unknown = 0, "Secret"
+    man = 1, "Male"
+    woman = 2, "Female"
 
 
 class UserRegFormAdmin(admin.FormAdmin):
     page_schema = PageSchema(label="UserRegForm", icon="fa fa-link")
 
-    # 创建表单数据模型
     class schema(BaseModel):
-        username: str = Field(..., title="用户名")
-        password: str = Field(..., title="密码", amis_form_item="input-password")
-        birthday: datetime.datetime = Field(None, title="出生日期")
-        gender: UserGender = Field(UserGender.unknown, title="性别")
-        is_active: bool = Field(True, title="是否激活")
+        username: str = Field(..., title="Username")
+        password: str = Field(..., title="Password", amis_form_item="input-password")
+        birthday: datetime.datetime = Field(None, title="Birth Date")
+        gender: UserGender = Field(UserGender.unknown, title="Gender")
+        is_active: bool = Field(True, title="Active")
         avatar: str = Field(
             None,
-            title="头像",
+            title="Avatar",
             max_length=100,
             amis_form_item=InputImage(maxLength=1, maxSize=2 * 1024 * 1024, receiver="post:/admin/file/upload"),
         )
 
-    # 处理表单提交数据
     async def handle(self, request: Request, data: schema, **kwargs) -> BaseApiOut:
         if data.username == "amisadmin" and data.password == "amisadmin":
-            return BaseApiOut(msg="注册成功!", data={"token": "xxxxxx"})
-        return BaseApiOut(status=-1, msg="用户名或密码错误!")
+            return BaseApiOut(msg="Registration successful!", data={"token": "xxxxxx"})
+        return BaseApiOut(status=-1, msg="Username or password incorrect!")
 
 
 @site.register_admin

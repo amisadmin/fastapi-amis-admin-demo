@@ -5,10 +5,13 @@ from typing import List
 
 from fastapi_amis_admin import admin
 
+# Define the backend directory
 BACKEND_DIR = Path(__file__).resolve().parent.parent
-sys.path.append(BACKEND_DIR.__str__())
+# Add the backend directory to a system path
+sys.path.append(str(BACKEND_DIR))
 
 
+# Define a Settings class inheriting from admin.Settings
 class Settings(admin.Settings):
     name: str = "FastAPI-Amis-Admin-Demo"
     host: str = "127.0.0.1"
@@ -17,7 +20,8 @@ class Settings(admin.Settings):
     allow_origins: List[str] = None
 
 
-# 设置FAA_GLOBALS环境变量
+# Set the FAA_GLOBALS environment variable
 os.environ.setdefault("FAA_GLOBALS", "core.globals")
 
+# Initialize settings with values from the .env file
 settings = Settings(_env_file=os.path.join(BACKEND_DIR, ".env"))
