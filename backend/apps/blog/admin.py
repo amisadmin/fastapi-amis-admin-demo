@@ -1,5 +1,5 @@
 import datetime
-from typing import Any, List
+from typing import Any, List, Optional
 
 from core.globals import site
 from fastapi_amis_admin import admin, amis
@@ -13,8 +13,7 @@ from fastapi_amis_admin.amis.components import (
 from fastapi_amis_admin.amis.constants import LevelEnum
 from fastapi_amis_admin.crud.parser import LabelField
 from fastapi_amis_admin.crud.schema import BaseApiOut
-from fastapi_amis_admin.models.enums import IntegerChoices
-from fastapi_amis_admin.models.fields import Field
+from fastapi_amis_admin.models import IntegerChoices, Field
 from pydantic import BaseModel
 from sqlmodel.sql.expression import Select
 from starlette.requests import Request
@@ -55,13 +54,13 @@ class UserGender(IntegerChoices):
 
 
 class TestAction(admin.ModelAction):
-    action = ActionType.Dialog(tooltip="自定义表单动作",icon="fa fa-star",level=LevelEnum.warning, dialog=Dialog())
+    action = ActionType.Dialog(tooltip="自定义表单动作", icon="fa fa-star", level=LevelEnum.warning, dialog=Dialog())
 
     # 创建表单数据模型
     class schema(BaseModel):
         username: str = Field(..., title="用户名")
         password: str = Field(..., title="密码", amis_form_item="input-password")
-        birthday: datetime.datetime = Field(None, title="出生日期")
+        birthday: Optional[datetime.datetime] = Field(None, title="出生日期")
         gender: UserGender = Field(UserGender.unknown, title="性别")
         is_active: bool = Field(True, title="是否激活")
 
@@ -151,7 +150,7 @@ class ArticleAdmin(admin.ModelAdmin):
                     "body": {
                         "type": "form",
                         "api": "https://3xsw4ap8wah59.cfc-execute.bj.baidubce.com/api/amis-mock/mock2/form/saveForm?waitSeconds"
-                        "=1",
+                               "=1",
                         "body": [
                             {"type": "input-text", "name": "text", "label": "文本"},
                             {

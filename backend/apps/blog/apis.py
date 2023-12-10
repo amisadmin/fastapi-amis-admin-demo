@@ -1,5 +1,5 @@
 import datetime
-from typing import List
+from typing import List, Optional
 
 from core.globals import site
 from fastapi import APIRouter
@@ -17,12 +17,12 @@ router = APIRouter(prefix="/articles", tags=["ArticleAPI"])
 # 3.如果`site.db`使用的是`Database`同步连接,则获取的是`Session`.
 #   2.1.同步Session可以充分利用`sqlalchemy`模型懒加载的特性.
 #   2.2.注意不要在异步方法中使用同步Session,否则可能堵塞异步循环.
-@router.get("/read/{id}", response_model=Article, summary="读取文章")
+@router.get("/read/{id}", response_model=Optional[Article], summary="读取文章")
 async def read_article(id: int, session: AsyncSess):
     return await session.get(Article, id)
 
 
-@router.get("/update/{id}", response_model=Article, summary="更新文章")
+@router.get("/update/{id}", response_model=Optional[Article], summary="更新文章")
 async def update_article(id: int, session: AsyncSess):
     article = await session.get(Article, id)
     if article:
@@ -39,13 +39,13 @@ async def update_article(id: int, session: AsyncSess):
 #   2.2如果开发一个python包,供其他人使用不能确定连接是同步或异步,应该统一使用`async_`前缀方法.
 
 
-@router.get("/read2/{id}", response_model=Article, summary="读取文章")
+@router.get("/read2/{id}", response_model=Optional[Article], summary="读取文章")
 async def read_article2(id: int):
     article = await site.db.async_get(Article, id)
     return article
 
 
-@router.put("/update2/{id}", response_model=Article, summary="更新文章")
+@router.put("/update2/{id}", response_model=Optional[Article], summary="更新文章")
 async def update_article2(id: int):
     article = await site.db.async_get(Article, id)
     if article:
@@ -75,13 +75,13 @@ async def list_article2():
 # 1.如果`site.db`使用的是`AsyncDatabase`异步连接,则获取的是`AsyncSession`.
 # 2.如果`site.db`使用的是`Database`同步连接,则获取的是`Session`.
 # 建议在`core.globals.py`中建立一个`db`对象,用于管理数据库连接.
-@router.get("/read3/{id}", response_model=Article, summary="读取文章")
+@router.get("/read3/{id}", response_model=Optional[Article], summary="读取文章")
 async def read_article3(id: int):
     article = await site.db.session.get(Article, id)
     return article
 
 
-@router.put("/update3/{id}", response_model=Article, summary="更新文章")
+@router.put("/update3/{id}", response_model=Optional[Article], summary="更新文章")
 async def update_article3(id: int):
     article = await site.db.session.get(Article, id)
     if article:

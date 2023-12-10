@@ -7,10 +7,10 @@ authors = [
 ]
 dependencies = [
     "uvicorn>=0.18.3",
-    "pydantic[dotenv]>=1.10.0,<2.0.0",
+    "pydantic[dotenv]>=2.0.0",
     "aiosqlite>=0.15.0",
-    "fastapi-amis-admin[cli]<0.7.0,>=0.6.4",
-    "sqlmodelx>=0.0.5",
+    "pydantic-settings>=2.0.0",
+    "fastapi-amis-admin[cli]>=0.7.0,<0.8.0",
     "alembic>=1.7.6",
 ]
 requires-python = ">=3.8"

@@ -143,3 +143,4 @@ cython_debug/
 amisadmin.db
 /.pdm.toml
 dev/
+/.pdm-python

@@ -1,6 +1,6 @@
 import datetime
 import time
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from core.globals import site
 from fastapi_amis_admin import admin
@@ -9,8 +9,7 @@ from fastapi_amis_admin.admin.site import APIDocsApp
 from fastapi_amis_admin.amis import TabsModeEnum
 from fastapi_amis_admin.amis.components import InputImage, Page, PageSchema
 from fastapi_amis_admin.crud.schema import BaseApiOut
-from fastapi_amis_admin.models.enums import IntegerChoices
-from fastapi_amis_admin.models.fields import Field
+from fastapi_amis_admin.models import IntegerChoices,Field
 from pydantic import BaseModel
 from starlette.requests import Request
 from starlette.templating import Jinja2Templates
@@ -87,10 +86,10 @@ class UserRegFormAdmin(admin.FormAdmin):
     class schema(BaseModel):
         username: str = Field(..., title="用户名")
         password: str = Field(..., title="密码", amis_form_item="input-password")
-        birthday: datetime.datetime = Field(None, title="出生日期")
+        birthday: Optional[datetime.datetime] = Field(None, title="出生日期")
         gender: UserGender = Field(UserGender.unknown, title="性别")
         is_active: bool = Field(True, title="是否激活")
-        avatar: str = Field(
+        avatar: Optional[str] = Field(
             None,
             title="头像",
             max_length=100,
